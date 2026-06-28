@@ -67,6 +67,8 @@
       revealEls.forEach((el) => io.observe(el));
     }
   }
+  /* signal the head-script failsafe that reveals are being handled */
+  window.__revealReady = true;
 
   /* ---------- Mobile sheet ---------- */
   const sheet = document.getElementById('mobile-nav');
@@ -199,9 +201,12 @@
     }
   });
 
-  /* ---------- Projects marquee: duplicate cards for a seamless loop ---------- */
+  /* ---------- Projects marquee: duplicate cards for a seamless loop ----------
+     Only enable the auto-scroll AFTER the clones exist (via .is-marquee), so the
+     animation never runs against a half-built track. Without this (or with JS
+     disabled / reduced motion) the row stays a plain horizontal scroll. */
   const marqueeTrack = document.querySelector('[data-marquee-track]');
-  if (marqueeTrack) {
+  if (marqueeTrack && !prefersReduced) {
     Array.from(marqueeTrack.children).forEach((item) => {
       const clone = item.cloneNode(true);
       clone.setAttribute('aria-hidden', 'true');
@@ -209,6 +214,8 @@
       clone.querySelectorAll('a, button').forEach((el) => el.setAttribute('tabindex', '-1'));
       marqueeTrack.appendChild(clone);
     });
+    void marqueeTrack.offsetWidth; // settle layout with the clones present
+    marqueeTrack.closest('.work-marquee')?.classList.add('is-marquee');
   }
 
   /* ---------- Current year ---------- */

@@ -18,7 +18,14 @@
   <meta name="twitter:image" content="https://alexholland.tech/assets/images/profile.jpg">
   <link rel="icon" type="image/png" href="assets/images/AH logo black.png">
   <link rel="apple-touch-icon" href="assets/images/AH logo black.png">
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    document.documentElement.classList.add('js');
+    /* Failsafe: if main.js never runs (stale cache, blocked, parse error),
+       reveal all content anyway so the page is never stuck blank. */
+    setTimeout(function () {
+      if (!window.__revealReady) document.documentElement.classList.add('reveal-fallback');
+    }, 2500);
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">

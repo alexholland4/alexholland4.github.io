@@ -117,6 +117,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .js .reveal.is-in { opacity: 1; transform: none; }
 
+/* Failsafe (see head script): if main.js never ran, show everything anyway */
+.reveal-fallback .reveal { opacity: 1 !important; transform: none !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; transition: none; }
 }
@@ -742,25 +745,27 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   color: var(--ink-dim);
   font-size: clamp(1rem, 0.96rem + 0.3vw, 1.15rem);
 }
+/* Default / no-JS / reduced-motion: a plain horizontal scroll of the real cards.
+   The auto-scroll only turns on once main.js has cloned the cards and added
+   .is-marquee — so the animation never runs against a half-built track. */
 .work-marquee {
-  overflow-x: auto;            /* fallback (no JS): a normal horizontal scroll */
+  overflow-x: auto;
   padding: 0.85rem 0 1.75rem;
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
 }
-.js .work-marquee {
-  overflow-x: clip;            /* with JS, clones make it a seamless marquee */
+.work-marquee.is-marquee {
+  overflow-x: clip;
   overflow-y: visible;
 }
 .work-track { display: flex; width: max-content; }
-.js .work-track {
+.work-marquee.is-marquee .work-track {
   animation: marquee 50s linear infinite;
   animation-delay: -33s;       /* begin partway in, around the 5th project */
   will-change: transform;
 }
-/* stop the auto-scroll while a card is hovered (focus-within would keep it
-   paused after the viewer returns focus to a card, so hover only) */
-.js .work-marquee:hover .work-track { animation-play-state: paused; }
+/* stop the auto-scroll while a card is hovered */
+.work-marquee.is-marquee:hover .work-track { animation-play-state: paused; }
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -771,9 +776,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .g-item[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  .js .work-marquee { overflow-x: auto; }
-  .js .work-track { animation: none; }
-  .work-track [data-clone] { display: none; }
+  .work-marquee.is-marquee { overflow-x: auto; }
+  .work-marquee.is-marquee .work-track { animation: none; }
 }
 
 .g-card {
