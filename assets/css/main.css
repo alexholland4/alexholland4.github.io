@@ -117,11 +117,25 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .js .reveal.is-in { opacity: 1; transform: none; }
 
-/* Failsafe (see head script): if main.js never ran, show everything anyway */
-.reveal-fallback .reveal { opacity: 1 !important; transform: none !important; }
+/* The hero is always in view on load, so play its reveal on a render-timed CSS
+   clock (in sync with the monogram intro) instead of waiting on main.js — keeps
+   the intro consistent even on slow first loads, and independent of the failsafe. */
+.js .hero .reveal {
+  animation: heroReveal 0.7s var(--ease) both;
+  animation-delay: calc(var(--d, 0) * 90ms);
+}
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Failsafe (see head script): if main.js never ran, show section content anyway.
+   The hero is excluded — it reveals itself via the CSS animation above. */
+.reveal-fallback .section .reveal { opacity: 1 !important; transform: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; transition: none; }
+  .js .hero .reveal { animation: none; opacity: 1; transform: none; }
 }
 
 /* ============================================================
@@ -1213,7 +1227,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     animation: heroMonoRecede 1.5s var(--ease) 2.7s forwards;
   }
   .js .hero .reveal {
-    transition-delay: calc(3s + var(--d, 0) * 0.12s);
+    animation-delay: calc(3s + var(--d, 0) * 0.12s);
   }
   .js .masthead { animation: heroFadeIn 0.6s var(--ease) 2.9s both; }
 
@@ -1246,7 +1260,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    faint in the background and the text immediately. */
 @media (prefers-reduced-motion: reduce) and (max-width: 960px) {
   .js .hero__mark .mono { animation: none; transform: translateX(24%) scale(0.96); opacity: 0.12; }
-  .js .hero .reveal { transition-delay: 0s; }
+  .js .hero .reveal { animation: none; opacity: 1; transform: none; }
   .js .hero__scroll { animation: none; opacity: 1; transform: none; }
   .js .masthead { animation: none; }
 }
