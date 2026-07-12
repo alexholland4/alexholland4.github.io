@@ -1,0 +1,217 @@
+/* ============================================================
+   Personalization layer
+   Active ONLY on ?for=<company> links with a matching config.
+   Fully inert (no visual effect) for any normal visitor.
+   Uses tokens from main.css (:root).
+   ============================================================ */
+
+/* lock scroll while the welcome overlay is up */
+body.perso-lock { overflow: hidden; }
+
+/* ---------- welcome overlay ---------- */
+.perso-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(120% 80% at 50% 42%, rgba(91, 230, 160, 0.07), transparent 60%),
+    var(--bg);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+.perso-overlay.is-in { opacity: 1; }
+.perso-overlay.is-out { opacity: 0; pointer-events: none; }
+
+/* the monogram plays dead-center at full size, then shrinks and rises to the top */
+.perso-mono {
+  width: min(54vh, 420px);
+  aspect-ratio: 1 / 1;
+  filter: drop-shadow(0 22px 50px rgba(0, 0, 0, 0.45));
+  transition: width 1s var(--ease), transform 1s var(--ease);
+}
+.perso-mono .mono { width: 100%; height: 100%; overflow: visible; }
+.perso-overlay.is-docked .perso-mono { width: min(15vh, 76px); transform: translateY(-27vh); }
+/* same deliberate draw speed as the original hero intro */
+.js .perso-mono .mono__s { animation-duration: 0.78s; animation-delay: calc(0.45s + var(--i) * 0.21s); }
+.js .perso-mono .mono__arrow { animation: monoArrowFlash 1.5s var(--ease) 2.1s forwards; }
+.js .perso-mono .mono__pop { animation: monoPop 1s var(--ease) 2.25s forwards; }
+
+/* welcome card: absolutely centered so the monogram is truly centered before it docks */
+.perso-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(560px, 92vw);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(165deg, var(--panel), var(--bg-2));
+  padding: clamp(1.6rem, 4vw, 2.5rem);
+  text-align: center;
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 5vh)) scale(0.98);
+  transition: opacity 0.5s var(--ease) 0.1s, transform 0.5s var(--ease) 0.1s;
+}
+.perso-overlay.is-docked .perso-card { opacity: 1; transform: translate(-50%, calc(-50% + 5vh)) scale(1); }
+
+/* re-open from the chip: show the card instantly, skip the full draw */
+.perso-overlay.no-draw .perso-mono { transition: none; }
+.js .perso-overlay.no-draw .mono__s { animation: none; stroke-dashoffset: 0; }
+.perso-overlay.no-draw .mono__arrow, .perso-overlay.no-draw .mono__pop { animation: none; opacity: 0; }
+
+/* exit: the monogram flies to the hero's mark while the card + backdrop clear */
+.perso-overlay.is-flying { background: transparent; pointer-events: none; transition: background 0.55s var(--ease); }
+.perso-overlay.is-flying .perso-card { opacity: 0; transform: translate(-50%, calc(-50% + 5vh)) scale(0.96); }
+
+/* hide the real hero monogram while our overlay owns the screen, so only one shows */
+.hero__mark { transition: opacity 0.6s var(--ease); }
+.perso-veil .hero__mark { opacity: 0; }
+
+.perso-card__x {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--ink-faint);
+  transition: color 0.2s var(--ease);
+}
+.perso-card__x:hover { color: var(--ink); }
+
+.perso-card__role {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.perso-card__hi {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.5rem + 2vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.perso-card__logo { height: 0.82em; width: auto; transform: translateY(0.04em); }
+.perso-card__msg {
+  margin: 1.15rem auto 0;
+  max-width: 44ch;
+  color: var(--ink-dim);
+  font-size: clamp(1.05rem, 1rem + 0.35vw, 1.22rem);
+  line-height: 1.5;
+}
+.perso-card__cta { margin-top: 1.9rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .perso-overlay, .perso-card, .perso-mono { transition: none; }
+}
+
+/* ============================================================
+   In-page annotations: highlight + handwritten margin note
+   ============================================================ */
+[data-hl] { scroll-margin-top: calc(var(--header-h) + 24px); }
+
+.perso-hl {
+  position: relative;
+  border-radius: 9px;
+  background: rgba(91, 230, 160, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(91, 230, 160, 0.34);
+  padding: 0.45em 0.7em;
+  margin: 0.1em -0.7em;
+}
+
+/* handwritten margin note: absolutely placed (never affects layout height).
+   side = right | left | above, chosen per item so it lands in real whitespace. */
+.perso-note {
+  position: absolute;
+  z-index: 6;
+  width: max-content;
+  max-width: min(17rem, 44vw);
+  font-family: "Caveat", "Segoe Script", cursive;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + 0.55vw, 1.5rem);
+  line-height: 1.12;
+  color: var(--accent);
+  pointer-events: none;
+  opacity: 0;
+  animation: perso-note-in 0.5s var(--ease) 0.15s forwards;
+}
+.perso-note__curl { position: absolute; width: 1.9rem; height: auto; color: var(--accent); }
+@keyframes perso-note-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* to the RIGHT of the item (roomy right margins, e.g. the short About rows) */
+.perso-note--right { left: 100%; margin-left: 2.2rem; top: -0.15em; text-align: left; transform: rotate(-2deg); transform-origin: left top; }
+.perso-note--right .perso-note__curl { right: 100%; top: 0.05em; margin-right: 0.4rem; }
+
+/* to the LEFT of the item (the empty ledger "when" column beside experience bullets) */
+.perso-note--left { right: 100%; margin-right: 2.2rem; top: -0.15em; text-align: right; transform: rotate(2deg); transform-origin: right top; }
+.perso-note--left .perso-note__curl { left: 100%; top: 0.05em; margin-left: 0.4rem; transform: scaleX(-1); }
+
+/* ABOVE the item (full-width cards with room above) */
+.perso-note--above { bottom: 100%; margin-bottom: 1.4rem; right: 0.75rem; text-align: right; transform: rotate(-1.5deg); transform-origin: right bottom; }
+.perso-note--above .perso-note__curl { top: 100%; right: 0.5rem; margin-top: 0.15rem; transform: rotate(-58deg); }
+
+@media (prefers-reduced-motion: reduce) { .perso-note { animation: none; opacity: 1; } }
+
+/* narrow screens: no side margins -> drop every note just under its item */
+@media (max-width: 900px) {
+  .perso-note, .perso-note--right, .perso-note--left, .perso-note--above {
+    position: static; display: block; max-width: none;
+    margin: 0.4rem 0 0.15rem; top: auto; right: auto; left: auto; bottom: auto;
+    text-align: left; transform: rotate(-1deg); transform-origin: left top;
+  }
+  .perso-note__curl { display: none; }
+}
+
+/* ============================================================
+   Persistent "personalized" chip (after the welcome is dismissed)
+   ============================================================ */
+.perso-chip {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 2500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.65rem 0.5rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(12, 20, 16, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-dim);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.perso-chip.is-in { opacity: 1; transform: none; }
+.perso-chip__open { display: inline-flex; align-items: center; gap: 0.5rem; color: inherit; }
+.perso-chip__open:hover { color: var(--ink); }
+.perso-chip__logo { height: 15px; width: auto; }
+.perso-chip__x {
+  margin-left: 0.15rem;
+  padding: 0 0.15rem;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+.perso-chip__x:hover { color: var(--ink); }
+
+@media (max-width: 560px) {
+  .perso-chip { left: 0.75rem; bottom: 0.75rem; font-size: 0.68rem; }
+}

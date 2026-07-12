@@ -31,6 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/personalize.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -143,7 +144,7 @@
           </div>
 
           <dl class="spec">
-            <div class="spec__row reveal" style="--d:4">
+            <div class="spec__row reveal" style="--d:4" data-hl="spec-now">
               <dt>Now</dt>
               <dd>AI Engineer @ Kohler Co.</dd>
             </div>
@@ -177,7 +178,7 @@
         </header>
 
         <!-- Featured project ------------------------------------------------ -->
-        <article class="feature reveal" data-project>
+        <article class="feature reveal" data-project data-hl="qualify">
           <a class="feature__link" href="https://joinqualify.com" data-case-open aria-label="Open the Qualify project">
             <div class="feature__media">
               <div class="brandcover" aria-hidden="true">
@@ -533,9 +534,9 @@
                   <span class="ledger__role-years">June 2025 — Present</span>
                 </div>
                 <ul class="ledger__list">
-                  <li><strong>Unlocked $2M+/year savings</strong> by leading enterprise Legal AI platform evaluation and deployment, partnering with vendors, attorneys, and senior leadership to assess capabilities, define high-value use cases, drive adoption, and measure ROI.</li>
-                  <li><strong>Automated review of 50K+ competitor products</strong> against thousands of design patents by building an AI pipeline that converts product imagery &amp; prior art into 3D models and ranks infringement risk using custom geometric similarity metrics.</li>
-                  <li><strong>Caught 20+ critical software vulnerabilities</strong> by developing an AI-driven CVE monitoring agent that parses newly published advisories, matches affected technologies to internal applications, and triggers owner-specific alerts.</li>
+                  <li data-hl="legal-ai"><strong>Unlocked $2M+/year savings</strong> by leading enterprise Legal AI platform evaluation and deployment, partnering with vendors, attorneys, and senior leadership to assess capabilities, define high-value use cases, drive adoption, and measure ROI.</li>
+                  <li data-hl="patent"><strong>Automated review of 50K+ competitor products</strong> against thousands of design patents by building an AI pipeline that converts product imagery &amp; prior art into 3D models and ranks infringement risk using custom geometric similarity metrics.</li>
+                  <li data-hl="cve"><strong>Caught 20+ critical software vulnerabilities</strong> by developing an AI-driven CVE monitoring agent that parses newly published advisories, matches affected technologies to internal applications, and triggers owner-specific alerts.</li>
                 </ul>
               </div>
               <div class="ledger__role-block">
@@ -544,9 +545,9 @@
                   <span class="ledger__role-years">May 2023 — June 2025</span>
                 </div>
                 <ul class="ledger__list">
-                  <li>Developed <strong>lead scoring model shown to save $3.55M/year</strong> from current methods through personalized sales.</li>
-                  <li>Improved cost and speed of marketing efforts by <strong>50%+</strong> by building backend of in-house &ldquo;customer persona&rdquo; web app.</li>
-                  <li>Enhanced demand forecasting model accuracy (<strong>$3 billion+ manufacturing decisions/year</strong>) through hyperparameter tuning.</li>
+                  <li data-hl="lead-scoring">Developed <strong>lead scoring model shown to save $3.55M/year</strong> from current methods through personalized sales.</li>
+                  <li data-hl="persona-app">Improved cost and speed of marketing efforts by <strong>50%+</strong> by building backend of in-house &ldquo;customer persona&rdquo; web app.</li>
+                  <li data-hl="forecasting">Enhanced demand forecasting model accuracy (<strong>$3 billion+ manufacturing decisions/year</strong>) through hyperparameter tuning.</li>
                 </ul>
               </div>
             </div>
@@ -621,5 +622,6 @@
   </div>
 
   <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/personalize.js"></script>
 </body>
 </html>

@@ -1,0 +1,12 @@
+{
+  "company": "Deloitte",
+  "role": "Forward Deployed Engineer, Microsoft AI & Data",
+  "logo": "assets/personalize/logos/deloitte.png",
+  "welcome": "You're hiring someone who can embed with a client and build the AI they need. That has been my job for two years. A few things below line up especially well.",
+  "highlights": [
+    { "target": "spec-now", "side": "right", "note": "\"Forward deployed engineer\" is your title. Been my job for two years." },
+    { "target": "qualify", "side": "above", "note": "Production-grade and owned end to end: CI/CD, monitoring, the works." },
+    { "target": "legal-ai", "side": "left", "dy": "2.6em", "note": "\"Embed with clients, translate use cases.\" Did exactly this, with a Legal team." },
+    { "target": "cve", "side": "left", "note": "\"Agentic, human-in-the-loop.\" Built it, routed to the owner." }
+  ]
+}
