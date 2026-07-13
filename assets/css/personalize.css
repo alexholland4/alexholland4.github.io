@@ -35,10 +35,8 @@ body.perso-lock { overflow: hidden; }
 }
 .perso-mono .mono { width: 100%; height: 100%; overflow: visible; }
 .perso-overlay.is-docked .perso-mono { width: min(15vh, 76px); transform: translateY(-27vh); }
-/* same deliberate draw speed as the original hero intro */
+/* same deliberate draw speed as the original hero intro (no closing arrow flash) */
 .js .perso-mono .mono__s { animation-duration: 0.78s; animation-delay: calc(0.45s + var(--i) * 0.21s); }
-.js .perso-mono .mono__arrow { animation: monoArrowFlash 1.5s var(--ease) 2.1s forwards; }
-.js .perso-mono .mono__pop { animation: monoPop 1s var(--ease) 2.25s forwards; }
 
 /* welcome card: absolutely centered so the monogram is truly centered before it docks */
 .perso-card {
@@ -124,11 +122,35 @@ body.perso-lock { overflow: hidden; }
 
 .perso-hl {
   position: relative;
+  isolation: isolate; /* contain the ::before's negative z-index to this element */
   border-radius: 9px;
-  background: rgba(91, 230, 160, 0.09);
-  box-shadow: inset 0 0 0 1px rgba(91, 230, 160, 0.34);
   padding: 0.45em 0.7em;
   margin: 0.1em -0.7em;
+}
+/* the jade wash + ring lives on ::after (NOT ::before -- the experience bullets draw
+   their dash marker with li::before, and sharing a pseudo mangles both). Clipped to
+   zero width at rest; the note's :hover opens the clip + fades it in, and reverses it
+   on the way out. Equal in/out durations so it animates both directions. */
+.perso-hl::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgba(91, 230, 160, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(91, 230, 160, 0.34);
+  opacity: 0;
+  clip-path: inset(0 100% 0 0 round 9px);
+  transition: clip-path 0.45s var(--ease), opacity 0.45s var(--ease);
+  pointer-events: none;
+}
+.perso-hl:has(.perso-note__txt:hover)::after {
+  opacity: 1;
+  clip-path: inset(0 0 0 0 round 9px);
+}
+/* reduced motion: skip the wipe, just fade in and out */
+@media (prefers-reduced-motion: reduce) {
+  .perso-hl::after { clip-path: inset(0 0 0 0 round 9px); transition: opacity 0.25s var(--ease); }
 }
 
 /* handwritten margin note: absolutely placed (never affects layout height).
@@ -147,22 +169,42 @@ body.perso-lock { overflow: hidden; }
   opacity: 0;
   animation: perso-note-in 0.5s var(--ease) 0.15s forwards;
 }
-.perso-note__curl { position: absolute; width: 1.9rem; height: auto; color: var(--accent); }
+/* the note container ignores the cursor, but the text itself must catch hover to reveal the highlight */
+.perso-note__txt { pointer-events: auto; cursor: default; }
+.perso-note__curl { position: absolute; width: 2.5rem; height: auto; color: var(--accent); transform-origin: 50% 50%; }
 @keyframes perso-note-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* to the RIGHT of the item (roomy right margins, e.g. the short About rows) */
 .perso-note--right { left: 100%; margin-left: 2.2rem; top: -0.15em; text-align: left; transform: rotate(-2deg); transform-origin: left top; }
-.perso-note--right .perso-note__curl { right: 100%; top: 0.05em; margin-right: 0.4rem; }
+.perso-note--right .perso-note__curl { right: 100%; top: 0.55em; margin-right: 0.3rem; }
+
+/* "fit" note: sits in a tighter right gutter (e.g. beside the full-width experience
+   bullets). Cap its width to whatever room remains before the viewport edge so a long
+   note wraps into multiple rows instead of overflowing. The note's left edge lands at
+   ~(50vw + 540px) on this centered layout, so the room left is ~50vw - 540px; subtract
+   a 16px safety gutter. It never exceeds the normal 17rem cap. */
+.perso-note--fit.perso-note--right { max-width: min(17rem, calc(50vw - 556px)); }
 
 /* to the LEFT of the item (the empty ledger "when" column beside experience bullets) */
 .perso-note--left { right: 100%; margin-right: 2.2rem; top: -0.15em; text-align: right; transform: rotate(2deg); transform-origin: right top; }
-.perso-note--left .perso-note__curl { left: 100%; top: 0.05em; margin-left: 0.4rem; transform: scaleX(-1); }
+.perso-note--left .perso-note__curl { left: 100%; top: 0.55em; margin-left: 0.3rem; }
 
 /* ABOVE the item (full-width cards with room above) */
 .perso-note--above { bottom: 100%; margin-bottom: 1.4rem; right: 0.75rem; text-align: right; transform: rotate(-1.5deg); transform-origin: right bottom; }
-.perso-note--above .perso-note__curl { top: 100%; right: 0.5rem; margin-top: 0.15rem; transform: rotate(-58deg); }
+.perso-note--above .perso-note__curl { top: 100%; left: 50%; margin-top: 0.25rem; margin-left: -1.05rem; }
 
 @media (prefers-reduced-motion: reduce) { .perso-note { animation: none; opacity: 1; } }
+
+/* a "fit" note needs a wide-ish gutter to wrap into readable rows. Below that, the
+   right margin is too thin, so drop it beneath its bullet (like the mobile fallback). */
+@media (max-width: 1440px) {
+  .perso-note--fit.perso-note--right, .perso-note--fit.perso-note--left {
+    position: static; display: block; max-width: none;
+    margin: 0.4rem 0 0.15rem; top: auto; right: auto; left: auto; bottom: auto;
+    text-align: left; transform: rotate(-1deg); transform-origin: left top;
+  }
+  .perso-note--fit .perso-note__curl { display: none; }
+}
 
 /* narrow screens: no side margins -> drop every note just under its item */
 @media (max-width: 900px) {

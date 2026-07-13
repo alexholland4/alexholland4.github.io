@@ -4,9 +4,9 @@
   "logo": "assets/personalize/logos/deloitte.png",
   "welcome": "You're hiring someone who can embed with a client and build the AI they need. That has been my job for two years. A few things below line up especially well.",
   "highlights": [
-    { "target": "spec-now", "side": "right", "note": "\"Forward deployed engineer\" is your title. Been my job for two years." },
-    { "target": "qualify", "side": "above", "note": "Production-grade and owned end to end: CI/CD, monitoring, the works." },
-    { "target": "legal-ai", "side": "left", "dy": "2.6em", "note": "\"Embed with clients, translate use cases.\" Did exactly this, with a Legal team." },
-    { "target": "cve", "side": "left", "note": "\"Agentic, human-in-the-loop.\" Built it, routed to the owner." }
+    { "target": "spec-now", "side": "right", "note": "You're hiring a \"forward deployed engineer.\" My experience translates directly to that." },
+    { "target": "qualify", "side": "above", "note": "Deloitte is looking for production-grade code, CI/CD, monitoring. Qualify is all of that, live." },
+    { "target": "legal-ai", "side": "right", "fit": true, "note": "You want someone to \"embed and translate use cases.\" I do exactly this, with Kohler Legal." },
+    { "target": "cve", "side": "left", "note": "You want it \"agentic, human-in-the-loop.\" My past work demonstrates that, like this example with owner-routed alerts for final decision." }
   ]
 }
