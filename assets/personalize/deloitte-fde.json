@@ -1,0 +1,14 @@
+{
+  "company": "Deloitte",
+  "role": "Forward Deployed Engineer, Microsoft AI & Data",
+  "logo": "assets/personalize/logos/deloitte.png",
+  "welcome": "You're hiring someone who can embed with a client and build the AI they need. That's the work I'm best at. A few things below line up especially well.",
+  "highlights": [
+    { "target": "spec-now", "side": "right", "note": "Your title is \"Forward Deployed Engineer.\" Different title, same practice I've spent the last few years perfecting at Kohler." },
+    { "target": "qualify", "side": "above", "note": "You want \"production-quality code... testing, CI/CD.\" Here that is, in production." },
+    { "target": "legal-ai", "side": "right", "fit": true, "note": "\"Embed with clients, translate GenAI use cases into solutions.\" Exactly my job with Kohler Legal." },
+    { "target": "patent", "side": "left", "note": "\"Agentic platforms, human-in-the-loop controls.\" This one measures confidence and routes alerts to a human for the final call." },
+    { "target": "ai-committee", "side": "right", "note": "\"Partner with leaders to align priorities.\" That's my seat on Kohler's AI Operating Committee." },
+    { "target": "founder-own", "side": "left", "note": "The FDE loop demonstrated: find it, build it, ship it, own the outcome." }
+  ]
+}

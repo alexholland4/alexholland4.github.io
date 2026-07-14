@@ -195,7 +195,7 @@
       (cfg.role ? '<div class="perso-card__role">' + esc(cfg.role) + "</div>" : "") +
       '<div class="perso-card__hi">Welcome in,&nbsp;' + logoHTML + "</div>" +
       (cfg.welcome ? '<p class="perso-card__msg">' + esc(cfg.welcome) + "</p>" : "") +
-      '<div class="perso-card__cta"><button class="btn btn--solid perso-dismiss" type="button">Take a look ↓</button></div>';
+      '<div class="perso-card__cta"><button class="btn btn--solid perso-dismiss" type="button">Take a look</button></div>';
 
     overlay.appendChild(monoWrap);
     overlay.appendChild(card);
