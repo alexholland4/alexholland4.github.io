@@ -102,13 +102,22 @@
   // We read the arrow tip's real screen position from the SVG's own coordinate
   // matrix (getScreenCTM) instead of estimating it, so the tip lands exactly.
   function orientArrows() {
-    var mobile = window.matchMedia("(max-width: 900px)").matches;
+    var mobile = window.matchMedia("(max-width: 960px)").matches; // matches the CSS static-note breakpoint
     document.querySelectorAll(".perso-note").forEach(function (note) {
       var curl = note.querySelector(".perso-note__curl");
       var item = note.parentElement;
       if (!curl || !item) return;
-      if (mobile) { curl.style.transform = ""; return; }
+      if (mobile) { curl.style.transform = ""; note.style.maxWidth = ""; return; }
       curl.style.transform = ""; // reset first so we measure the untransformed arrow (no drift on re-runs)
+
+      // clamp side notes to the room left before the viewport edge, so on narrower
+      // desktop/tablet windows they wrap into more rows instead of running off screen
+      note.style.maxWidth = "";
+      var nr = note.getBoundingClientRect();
+      var room = note.classList.contains("perso-note--right") ? window.innerWidth - nr.left - 14
+               : note.classList.contains("perso-note--left") ? nr.right - 14
+               : Infinity;
+      if (nr.width > room) note.style.maxWidth = Math.max(96, Math.floor(room)) + "px";
 
       var ir = item.getBoundingClientRect();
       var cr = curl.getBoundingClientRect();
